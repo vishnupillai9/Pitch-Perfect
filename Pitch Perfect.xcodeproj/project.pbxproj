@@ -15,7 +15,6 @@
 		2706481B1A697907008001DB /* Pitch_PerfectTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2706481A1A697907008001DB /* Pitch_PerfectTests.swift */; };
 		2717D1061A6BF2D300BEAB94 /* RecordedAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2717D1051A6BF2D300BEAB94 /* RecordedAudio.swift */; };
 		27EDC1171A6A7437006C69E7 /* PlaySoundsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27EDC1161A6A7437006C69E7 /* PlaySoundsViewController.swift */; };
-		27EDC1191A6A7A5A006C69E7 /* movie_quote.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 27EDC1181A6A7A5A006C69E7 /* movie_quote.mp3 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,7 +40,6 @@
 		2706481A1A697907008001DB /* Pitch_PerfectTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pitch_PerfectTests.swift; sourceTree = "<group>"; };
 		2717D1051A6BF2D300BEAB94 /* RecordedAudio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecordedAudio.swift; sourceTree = "<group>"; };
 		27EDC1161A6A7437006C69E7 /* PlaySoundsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaySoundsViewController.swift; sourceTree = "<group>"; };
-		27EDC1181A6A7A5A006C69E7 /* movie_quote.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = movie_quote.mp3; path = ../../../../Downloads/movie_quote.mp3; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +97,6 @@
 			isa = PBXGroup;
 			children = (
 				270648031A697907008001DB /* Info.plist */,
-				27EDC1181A6A7A5A006C69E7 /* movie_quote.mp3 */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -203,7 +200,6 @@
 			files = (
 				2706480A1A697907008001DB /* Main.storyboard in Resources */,
 				2706480F1A697907008001DB /* LaunchScreen.xib in Resources */,
-				27EDC1191A6A7A5A006C69E7 /* movie_quote.mp3 in Resources */,
 				2706480C1A697907008001DB /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
