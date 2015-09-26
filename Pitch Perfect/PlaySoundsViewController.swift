@@ -23,21 +23,21 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //Hide stop button when view loads
+        // Hide stop button when view loads
         stopButton.hidden = true
         
-        audioPlayer = AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl, error: nil)
+        audioPlayer = try? AVAudioPlayer(contentsOfURL: receivedAudio.filePathUrl)
         audioPlayer.enableRate = true
         
         audioEngine = AVAudioEngine()
-        audioFile = AVAudioFile(forReading: receivedAudio.filePathUrl, error: nil)
+        audioFile = try? AVAudioFile(forReading: receivedAudio.filePathUrl)
         
         audioPlayer.delegate = self
     }
     
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
         if !player.playing {
-            //Hide the stop button once playing has finished
+            // Hide the stop button once playing has finished
             self.stopButton.hidden = true
         }
     }
@@ -49,44 +49,44 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
         audioPlayer.play()
         
         if audioPlayer.playing {
-            //Show the stop button if audio is being played
+            // Show the stop button if audio is being played
             stopButton.hidden = false
         }
     }
     
     @IBAction func playSlow(sender: UIButton) {
-        //Play audio at a rate of 0.5
+        // Play audio at a rate of 0.5
         playAudio(0.5)
     }
 
     @IBAction func playFast(sender: UIButton) {
-        //Play audio at a rate of 2.0
+        // Play audio at a rate of 2.0
         playAudio(2.0)
     }
     
     @IBAction func playChipmunkAudio(sender: UIButton) {
-        var chipmunkPitchEffect = AVAudioUnitTimePitch()
+        let chipmunkPitchEffect = AVAudioUnitTimePitch()
         chipmunkPitchEffect.pitch = 1000
         
         playAudioWithEffect(chipmunkPitchEffect)
     }
     
     @IBAction func playDarthvaderAudio(sender: UIButton) {
-        var darthvaderPitchEffect = AVAudioUnitTimePitch()
+        let darthvaderPitchEffect = AVAudioUnitTimePitch()
         darthvaderPitchEffect.pitch = -1000
         
         playAudioWithEffect(darthvaderPitchEffect)
     }
     
     @IBAction func playEchoAudio(sender: UIButton) {
-        var echoEffect = AVAudioUnitDelay()
+        let echoEffect = AVAudioUnitDelay()
         echoEffect.delayTime = 0.7
         
         playAudioWithEffect(echoEffect)
     }
     
     @IBAction func playReverbAudio(sender: UIButton) {
-        var reverbEffect = AVAudioUnitReverb()
+        let reverbEffect = AVAudioUnitReverb()
         reverbEffect.loadFactoryPreset(.LargeRoom)
         reverbEffect.wetDryMix = 70
         
@@ -96,24 +96,27 @@ class PlaySoundsViewController: UIViewController, AVAudioPlayerDelegate {
     func playAudioWithEffect(effect: NSObject) {
         stopAudio()
         
-        var audioPlayerNode = AVAudioPlayerNode()
+        let audioPlayerNode = AVAudioPlayerNode()
         audioEngine.attachNode(audioPlayerNode)
         
-        var changeEffect = effect as! AVAudioNode
+        let changeEffect = effect as! AVAudioNode
         audioEngine.attachNode(changeEffect)
         
         audioEngine.connect(audioPlayerNode, to: changeEffect, format: nil)
         audioEngine.connect(changeEffect, to: audioEngine.outputNode, format: nil)
         
         audioPlayerNode.scheduleFile(audioFile, atTime: nil, completionHandler: nil)
-        audioEngine.startAndReturnError(nil)
+        do {
+            try audioEngine.start()
+        } catch _ {
+        }
         
         audioPlayerNode.play()
         
         if audioPlayerNode.playing {
             stopButton.hidden = false
             
-            var timer = NSTimer.scheduledTimerWithTimeInterval(audioPlayer.duration, target: self, selector: "stopPlay:", userInfo: nil, repeats: false)
+            _ = NSTimer.scheduledTimerWithTimeInterval(audioPlayer.duration, target: self, selector: "stopPlay:", userInfo: nil, repeats: false)
         }
     }
     
