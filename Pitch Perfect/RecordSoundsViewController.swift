@@ -18,24 +18,25 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
     var audioRecorder:AVAudioRecorder!
     var recordedAudio:RecordedAudio!
     
-    override func viewWillAppear(animated: Bool) {
-        stopButton.hidden = true
-        recordButton.enabled = true
+    override func viewWillAppear(_ animated: Bool) {
+        stopButton.isHidden = true
+        recordButton.isEnabled = true
     }
 
-    @IBAction func recordAudio(sender: UIButton) {
-        stopButton.hidden = false
+    @IBAction func recordAudio(_ sender: UIButton) {
+        stopButton.isHidden = false
         recordingInProgress.text = "recording"
         
         // Record the user's voice
-        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] 
+        let dirPath = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0] 
         
-        let currentDateTime = NSDate()
-        let formatter = NSDateFormatter()
+        let currentDateTime = Date()
+        let formatter = DateFormatter()
         formatter.dateFormat = "ddMMyyyy-HHmmss"
-        let recordingName = formatter.stringFromDate(currentDateTime)+".wav"
-        let pathArray = [dirPath, recordingName]
-        let filePath = NSURL.fileURLWithPathComponents(pathArray)
+        
+        let recordingName = formatter.string(from: currentDateTime)+".wav"
+        let path = dirPath + recordingName
+        let filePath = URL(fileURLWithPath: path)
         
         // Setup audio session
         let session = AVAudioSession.sharedInstance()
@@ -45,39 +46,39 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         }
         
         // Initiliaze and prepare the recorder
-        audioRecorder = try? AVAudioRecorder(URL: filePath!, settings: [:])
+        audioRecorder = try? AVAudioRecorder(url: filePath, settings: [:])
         audioRecorder.delegate = self
-        audioRecorder.meteringEnabled = true
+        audioRecorder.isMeteringEnabled = true
         audioRecorder.prepareToRecord()
         audioRecorder.record()
     }
     
-    func audioRecorderDidFinishRecording(recorder: AVAudioRecorder, successfully flag: Bool) {
+    func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         
         if (flag) {
             // Perform segue if the audio recorded has successfully finished recording
             recordedAudio = RecordedAudio(filePathUrl: recorder.url, title: recorder.url.lastPathComponent)
-            self.performSegueWithIdentifier("stopRecording", sender: recordedAudio)
+            self.performSegue(withIdentifier: "stopRecording", sender: recordedAudio)
         }
         else {
-            recordButton.enabled = true
-            stopButton.hidden = true
+            recordButton.isEnabled = true
+            stopButton.isHidden = true
         }
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Prepare for segue: passing the recorded audio file from this vc to the play sounds vc
         if segue.identifier == "stopRecording" {
-            let playSoundsVC:PlaySoundsViewController = segue.destinationViewController as! PlaySoundsViewController
+            let playSoundsVC:PlaySoundsViewController = segue.destination as! PlaySoundsViewController
             let data = sender as! RecordedAudio
             playSoundsVC.receivedAudio = data
         }
     }
     
-    @IBAction func stopRecordAudio(sender: UIButton) {
+    @IBAction func stopRecordAudio(_ sender: UIButton) {
         recordingInProgress.text = "Tap to record"
-        recordButton.enabled = false
+        recordButton.isEnabled = false
         
         // Stop recording the user's voice
         audioRecorder.stop()
@@ -87,5 +88,6 @@ class RecordSoundsViewController: UIViewController, AVAudioRecorderDelegate {
         } catch _ {
         }
     }
+    
 }
 
